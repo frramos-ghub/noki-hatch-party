@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Allura&family=Lexend:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+@font-face{font-family:'Halimum';src:url('fonts/Halimun.ttf') format('truetype');font-display:swap}
+body{margin:0;background:#0d2463;color:#fff;font-family:'Lexend',sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#ffd77a}a:hover{color:#fff}
+a:focus-visible{outline:2px solid #ffd77a;outline-offset:3px}
+</style>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect width="100" height="100" fill="#2f7fc4"/><ellipse cx="50" cy="52" rx="17" ry="21" fill="#f6ecc8" stroke="#14110f" stroke-width="3"/></svg></template>
+<meta name="ext-resource-dependency" content="assets/gcash-qr.png">
+<meta name="ext-resource-dependency" content="assets/bpi-qr.png">
+<meta name="ext-resource-dependency" content="assets/gcash-qr-full.jpeg">
+<meta name="ext-resource-dependency" content="assets/bpi-qr-full.png">
+</helmet>
+<div style="min-height:100vh;background:linear-gradient(180deg,#5fb4e2 0%,#2f7fc4 30%,#173f8d 65%,#0d2463 100%);padding:clamp(24px,5vw,56px) clamp(18px,4vw,40px) 64px;box-sizing:border-box">
+  <div style="max-width:520px;margin:0 auto;display:flex;flex-direction:column;align-items:center;gap:28px;text-align:center">
+    <a href="index.html" style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 18px;border-radius:999px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.6);color:#fff;text-decoration:none;font-weight:500;font-size:15px" style-hover="background:rgba(255,255,255,.12)">← Back to invite</a>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      <h1 style="margin:0;font-size:clamp(28px,6vw,38px);font-weight:600;letter-spacing:.06em;text-transform:uppercase">Diaper fund</h1>
+      <p style="margin:0;color:#e6f3ff;line-height:1.6;max-width:38ch">Thank you for helping us stock up for the little one! Choose GCash or BPI, then scan with any InstaPay-enabled app.</p>
+    </div>
+    <div role="tablist" aria-label="Payment option" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:6px;border-radius:999px;background:rgba(10,30,80,.35);box-shadow:inset 0 0 0 1px rgba(255,255,255,.3);width:100%;max-width:320px;box-sizing:border-box">
+      <button type="button" role="tab" aria-selected="{{ gcashSel }}" onClick="{{ pickGcash }}" style="{{ gcashTab }}">GCash</button>
+      <button type="button" role="tab" aria-selected="{{ bpiSel }}" onClick="{{ pickBpi }}" style="{{ bpiTab }}">BPI</button>
+    </div>
+    <div style="width:100%;padding:clamp(16px,4vw,24px);box-sizing:border-box;border-radius:28px;background:linear-gradient(135deg,rgba(255,255,255,.2) 0%,rgba(10,40,110,.42) 45%,rgba(10,40,110,.52) 100%);backdrop-filter:blur(18px) saturate(180%);-webkit-backdrop-filter:blur(18px) saturate(180%);box-shadow:inset 0 1px 0 rgba(255,255,255,.75),inset 0 0 0 1px rgba(255,255,255,.22),inset 0 18px 30px -18px rgba(255,255,255,.45),0 18px 40px rgba(4,16,50,.35)">
+      <img src="{{ qrSrc }}" alt="{{ qrAlt }}" style="width:100%;height:auto;display:block;border-radius:18px">
+    </div>
+    <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:10px">
+      <a href="{{ saveHref }}" download="{{ saveName }}" style="display:inline-flex;align-items:center;height:50px;padding:0 24px;border-radius:999px;background:#fff;color:#0d2463;text-decoration:none;font-weight:600" style-hover="background:#ffd77a">Save QR code</a>
+    </div>
+    <p style="margin:0;color:#c9dcf5;font-size:14px;line-height:1.6;max-width:40ch">On your phone? Save the QR code, then upload it from your gallery in your GCash or bank app.</p>
+    <div style="font-family:'Halimum','Allura',cursive;font-size:32px;color:#c9dcf5">Thank you very much!</div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { opt: 'gcash' };
+  renderVals() {
+    const g = this.state.opt === 'gcash';
+    const tab = on => ({ height: 44, borderRadius: 999, border: 'none', cursor: 'pointer', fontFamily: 'inherit', fontSize: 15, fontWeight: 600,
+      background: on ? '#fff' : 'transparent', color: on ? '#0d2463' : '#fff' });
+    return {
+      gcashSel: g ? 'true' : 'false', bpiSel: g ? 'false' : 'true',
+      gcashTab: tab(g), bpiTab: tab(!g),
+      pickGcash: () => this.setState({ opt: 'gcash' }),
+      pickBpi: () => this.setState({ opt: 'bpi' }),
+      qrSrc: g ? 'assets/gcash-qr.png' : 'assets/bpi-qr.png',
+      qrAlt: g ? 'GCash InstaPay QR code for the diaper fund' : 'BPI InstaPay QR code for the diaper fund',
+      saveHref: g ? 'assets/gcash-qr-full.jpeg' : 'assets/bpi-qr-full.png',
+      saveName: g ? 'diaper-fund-gcash-qr.jpeg' : 'diaper-fund-bpi-qr.png',
+    };
+  }
+}
+</script>
+</body>
+</html>
